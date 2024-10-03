@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Geocodificación</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Coordenadas</h1>
+      <form method="post">
+        <input type="text" name="latitud" placeholder="Latitud" required />
+        <input type="text" name="longitud" placeholder="Longitud" required />
+        <button type="submit">Obtener Dirección</button>
+      </form>
+
+      {% if direccion %}
+      <h2>Dirección: {{ direccion }}</h2>
+      <div id="map" style="height: 400px"></div>
+      <script>
+        // Asegúrate de que las coordenadas se inyectan como números
+        var latitud = {{ latitud }} ;
+        var longitud = {{ longitud }};
+        var map = L.map('map').setView([latitud, longitud], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([latitud, longitud]).addTo(map)
+            .bindPopup('Ubicación: {{ direccion }}')
+            .openPopup();
+      </script>
+      {% endif %}
+
+      <!-- {% if direccion %}
+        <h2>Dirección: {{ direccion }}</h2>
+        {% endif %} -->
+    </div>
+  </body>
+</html>
